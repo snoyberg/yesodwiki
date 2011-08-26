@@ -221,7 +221,9 @@ getId now uid (ap@(AbsPath fp), f) = do
                         _ -> return Nothing
         case mtid' of
             Nothing -> fmap (flip FITopic slug) $ insert (TFamily now) >>= insert . (flip (Topic uid title now) False)
-            Just tid -> return $ FITopic tid slug
+            Just tid -> do
+                update tid [TopicTitle =. title]
+                return $ FITopic tid slug
 
 toFile :: Entry -> State (Set.Set MapNodeSlug) (Maybe (AbsPath, File))
 toFile entry
